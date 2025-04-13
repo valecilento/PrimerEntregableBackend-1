@@ -52,7 +52,6 @@ module.exports = {
 
 addProduct({
     title: "Product A",
-    description: "Description A",
     price: 10.99,
     thumbnail: "thumbnailA.jpg",
     code: "codeA",
@@ -69,6 +68,8 @@ updateProduct(7, {
     stock: 50,
     category: "Category B"
 });
+
+//Ejecución de prueba
 console.log(getProducts())
 deleteProduct(7)
 console.log(getProducts())

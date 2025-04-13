@@ -40,7 +40,7 @@ function addProductToCart(cartId, productId) { //agrego un producto a un cart
         if (productIndex !== -1) { //si existe el producto
             cart.products[productIndex].quantity += 1; //si existe, le sumo 1 a la cantidad
             console.log('Product already in cart');
-        }else { //Si el producto no existe en el cart
+        }else { 
             const product = { id: productId, quantity: 1 }; //si no existe, lo creo con cantidad 1
             cart.products.push(product); //agrego el producto al cart;
             console.log('Product added to cart');
@@ -54,10 +54,9 @@ function addProductToCart(cartId, productId) { //agrego un producto a un cart
     
 // Ejecución de prueba
 createCart(); // creo el cart
-console.log("Todos los carts:", getCarts()); // muestro todos los carts
-console.log("Cart con id 2:", getCartById(2)); // muestro el cart con id 2
-
-addProductToCart(1, 2); //agrego un producto al cart
+console.log("Todos los carts:", getCarts()); 
+console.log("Cart con id 2:", getCartById(2)); 
+addProductToCart(1, 2); 
 
 module.exports = {
     createCart,
