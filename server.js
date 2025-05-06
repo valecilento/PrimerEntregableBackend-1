@@ -7,8 +7,8 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const server = createServer(app); // Crear un servidor HTTP
-const wss = new Server({ server }); // Crear servidor WebSocket
+const server = createServer(app); // Crea un servidor HTTP
+const wss = new Server({ server }); // Crea servidor WebSocket
 
 
 const storage = multer.diskStorage({
@@ -32,8 +32,8 @@ app.engine('handlebars', handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars"); 
 
-app.use('/public', express.static('public')); // Servir archivos estáticos
-app.use(express.json()); // Middleware para manejar JSON
+app.use('/public', express.static('public')); 
+app.use(express.json()); 
 
 let products = []; // Lista de productos en memoria
 
@@ -44,18 +44,17 @@ app.get("/products", (req, res) => {
     res.json(products); // Devuelve los productos guardados en memoria
 });
 
-
 // Manejo de conexión de WebSocket
 wss.on('connection', ws => {
     console.log('Nuevo cliente conectado');
 
-    ws.send(JSON.stringify(products)); // Enviar productos actuales al nuevo cliente
+    ws.send(JSON.stringify(products)); 
     ws.on('message', message => {
         try {
             const newProduct = JSON.parse(message);
             newProduct.id = newProduct.id || Date.now().toString(); // Asigno un ID único al producto
-            products.push(newProduct); // Agregar producto al array
-            broadcastProducts(); // Actualizar todos los clientes
+            products.push(newProduct); // Agrego el producto al array
+            broadcastProducts(); // Actualizo para todos los clientes
         } catch (error) {
             console.error('Error al procesar el mensaje:', error);
         }
@@ -68,7 +67,7 @@ wss.on('connection', ws => {
 app.delete("/delete-product/:id", (req, res) => {
     const productId = req.params.id;
     products = products.filter(product => product.id !== productId);
-    broadcastProducts(); // Actualizar todos los clientes
+    broadcastProducts();
     res.json({ message: "Producto eliminado" });
 });
 
@@ -88,15 +87,12 @@ app.put("/edit-product/:id", express.json(), (req, res) => {
     if (productIndex !== -1) {
         products[productIndex].name = name;
         products[productIndex].price = price;
-
         broadcastProducts(); 
         res.json({ message: "Producto actualizado" });
     } else {
         res.status(404).json({ message: "Producto no encontrado" });
     }
 });
-
-
 
 // Función para enviar los productos a todos los clientes conectados
 function broadcastProducts() {

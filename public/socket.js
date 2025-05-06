@@ -4,12 +4,11 @@ socket.onmessage = (event) => {
     const products = JSON.parse(event.data);
     const productList = document.getElementById('product-list');
 
-    productList.innerHTML = ""; // Limpia lista antes de actualizar
+    productList.innerHTML = ""; // Limpia la lista antes de actualizar
 
     products.forEach(product => {
         const li = document.createElement("li");
         li.setAttribute("id", product.id);
-
         li.innerHTML = `
             <img src="${product.image}" alt="${product.name}" width="100">
             
@@ -24,11 +23,9 @@ socket.onmessage = (event) => {
             <button class="btn btn-success d-none" onclick="saveProduct('${product.id}')">Guardar</button>
             <button class="btn btn-danger" onclick="deleteProduct('${product.id}')">Eliminar</button>
         `;
-
         productList.appendChild(li);
     });
 };
-
 
 document.getElementById("productForm").addEventListener("submit", async (event) => {
     event.preventDefault(); // Evita recargar la página
@@ -44,10 +41,9 @@ document.getElementById("productForm").addEventListener("submit", async (event) 
     const result = await response.json();
     console.log("Imagen subida:", result.imageUrl);
 
-    // Mostrar la imagen en la vista
+    // Muestra la imagen en la vista y la oculta
     const previewImage = document.getElementById("preview");
     previewImage.src = result.imageUrl;
-    // previewImage.style.display = "block";
     document.getElementById("productForm").reset()
 });
 
@@ -74,14 +70,6 @@ async function sendProduct() {
 
             const result = await response.json();
             console.log("Imagen subida en:", result.imageUrl);
-            
-            // Muestra la imagen en la vista
-            // const previewImage = document.getElementById("preview");
-            // if (previewImage) {
-            //     previewImage.src = result.imageUrl;
-            //     previewImage.style.display = "block";
-            // }
-            // Envía el producto al WebSocket con la URL de la imagen correcta
             const product = { name, price, image: result.imageUrl };
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send(JSON.stringify(product));
@@ -129,7 +117,6 @@ async function editProduct(productId) {
      document.getElementById(`price-${productId}`).classList.add("d-none");
      document.getElementById(`input-price-${productId}`).classList.remove("d-none");
  
-     // Mostrar el botón "Guardar"
      document.querySelector(`button[onclick="saveProduct('${productId}')"]`).classList.remove("d-none");
  }
  
@@ -147,7 +134,7 @@ async function saveProduct(productId) {
     if (response.ok) {
         console.log("Producto actualizado:", productId);
 
-        // Restaurar la visualización
+        // Restaura el texto y oculta los inputs
         document.getElementById(`name-${productId}`).textContent = name;
         document.getElementById(`price-${productId}`).textContent = `$ ${price}`;
         
