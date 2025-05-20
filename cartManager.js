@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+import {promises as fs} from 'fs';
+import path from 'path';
 
 const pathCarts = path.join(__dirname, 'carts.json'); 
 
@@ -63,29 +63,7 @@ async function addProductToCart(cartId, productId) { //agrego un producto a un c
     }
  } 
     
-// Ejecución de prueba
-
-// async function testCarts() {
-//    const carts = await getCarts();
-//    console.log("Todos los carts:", carts);
-// }
-// testCarts(); 
-
-// createCart().then(() => {
-//     console.log("Carrito creado correctamente");
-// }); 
-
-// async function testGetCartById() {
-//     const cart = await getCartById(2); 
-//     console.log("Cart con id 2:", cart); 
-// }
-// testGetCartById();
-
-// addProductToCart(1, 2).then(() => {
-//    console.log("Producto agregado correctamente");
-// }); 
-
-module.exports = {
+export {
     createCart,
     getCarts,
     getCartById,

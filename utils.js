@@ -1,5 +1,6 @@
-const multer = require ("multer");
-const express = require ("express");
+import multer from "multer";
+import express from "express";
+
 const app = express ();
 
 const storage = multer.diskStorage({
@@ -13,6 +14,4 @@ const storage = multer.diskStorage({
 
 const uploader = multer({storage});
 
-module.exports = {
-      uploader,
-};
+export default uploader;

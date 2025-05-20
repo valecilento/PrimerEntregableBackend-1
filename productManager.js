@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+import {promises as fs} from 'fs';
+import path from 'path';
 
 const pathProducts = path.join(__dirname, 'products.json');
 
@@ -66,59 +66,10 @@ async function deleteProduct(id) {
         return false; 
     }
 }
-
-module.exports = {
+export {
     getProducts,
     getProductById,
     addProduct,
     updateProduct,
     deleteProduct
 };
-
-//Ejecución de prueba
-
-// async function testGetProducts() {
-//     const products = await getProducts(); 
-//     console.log("Todos los productos:", products); 
-// }; 
-
-// async function testDeleteAndUpdateProduct() {
-//     const deleted = await deleteProduct(4);
-//     if (deleted) {
-//         console.log("Producto eliminado con index 1"); 
-//     } else {
-//         console.log("No se pudo eliminar el producto con index 1"); 
-//     }
-//     const updated = await updateProduct(4, {
-//         title: "Updated Product",
-//         description: "Updated Description",
-//         price: 15.99,
-//         thumbnail: "updatedThumbnail.jpg",
-//         code: "updatedCode",
-//         stock: 200,
-//         category: "Updated Category"
-//     });
-//     if (updated) {
-//         console.log("Producto actualizado con index 1"); 
-//     } else {
-//         console.log("No se pudo actualizar el producto con index 1"); 
-//     }
-// }
-// async function testAddProduct(){
-//     const product = await addProduct({
-//         title: "Product E",
-//         description: "Description A",
-//         price: 10.99,
-//         thumbnail: "thumbnailA.jpg",
-//         code: "codeA",
-//         stock: 100,
-//         category: "Category A"
-//     });
-//     console.log("Producto agregado:", product); 
-// }
-
-// testGetProducts() 
-// testAddProduct()
-// testDeleteAndUpdateProduct()
-// testGetProducts()
-

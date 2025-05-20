@@ -1,16 +1,79 @@
-const express = require('express');
-const { createServer } = require('http');
-const { Server } = require('ws');
-const handlebars = require('express-handlebars');
-const WebSocket = require('ws');
-const multer = require('multer');
-const path = require('path');
+import express from 'express';
+import mongoose from 'mongoose';
+import { createServer } from 'http';
+import { WebSocketServer } from 'ws';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import WebSocket from 'ws';
+import { productModel } from './models/products.model.js';
+import productsRouter from './router/products.router.js';
+import multer from 'multer';
+import handlebars from 'express-handlebars';
+
 
 const app = express();
+app.use(express.json());
+const PORT = 4000;
+app.use('/api/products', productsRouter);
+// app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
+// server.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
+
+
 const server = createServer(app); // Crea un servidor HTTP
-const wss = new Server({ server }); // Crea servidor WebSocket
+const wss = new WebSocketServer({ server }); // Crea servidor WebSocket
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
 
 
+mongoose.connect('mongodb+srv://valeecilento:AyxG2N0QnTBNbBxr@cluster0.mmnvabv.mongodb.net/products').then(() => {
+    console.log('Conectado a la base de datos');
+    server.listen(PORT, () => {
+        console.log(`Servidor HTTP corriendo en http://localhost:${PORT}`);
+    });
+    app.listen(PORT, () => {
+        console.log(`API disponible`);
+    })
+}).catch(error => {
+    console.error('Error al conectar a la base de datos:', error);
+});
+
+let products = productsRouter.products;
+
+app.get('/', (req, res) => { // Renderiza la vista principal
+     res.render('home', { products });
+});
+
+wss.on('connection', async (ws) => {
+    console.log('Nuevo cliente conectado');
+
+    const productsData = await productModel.find().lean();
+    console.log('Productos enviados al cliente:', productsData); // Mensaje con los productos en consola
+    ws.send(JSON.stringify(productsData));
+
+    ws.on('message', async (message) => {
+        try {
+            broadcastProducts(); // Actualiza clientes
+        } catch (error) {
+            console.error('Error al procesar el mensaje:', error);
+        }
+    });
+    ws.on('close', () => {
+        console.log('Cliente desconectado');
+    });
+});
+
+async function broadcastProducts() {
+    try {
+        const productsData = await productModel.find().lean();
+        wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(productsData));
+            }
+        });
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+    }
+}
 const storage = multer.diskStorage({
     destination: "./public/img/",
     filename: (req, file, cb) => {
@@ -34,77 +97,6 @@ app.set("view engine", "handlebars");
 
 app.use('/public', express.static('public')); 
 app.use(express.json()); 
+app.use('/api/products', productsRouter);
 
-let products = []; // Lista de productos en memoria
-
-app.get('/', (req, res) => { // Renderiza la vista principal
-    res.render('home', { products });
-});
-app.get("/products", (req, res) => {
-    res.json(products); // Devuelve los productos guardados en memoria
-});
-
-// Manejo de conexión de WebSocket
-wss.on('connection', ws => {
-    console.log('Nuevo cliente conectado');
-
-    ws.send(JSON.stringify(products)); 
-    ws.on('message', message => {
-        try {
-            const newProduct = JSON.parse(message);
-            newProduct.id = newProduct.id || Date.now().toString(); // Asigno un ID único al producto
-            products.push(newProduct); // Agrego el producto al array
-            broadcastProducts(); // Actualizo para todos los clientes
-        } catch (error) {
-            console.error('Error al procesar el mensaje:', error);
-        }
-    });
-
-    ws.on('close', () => {
-        console.log('Cliente desconectado');
-    });
-});
-app.delete("/delete-product/:id", (req, res) => {
-    const productId = req.params.id;
-    products = products.filter(product => product.id !== productId);
-    broadcastProducts();
-    res.json({ message: "Producto eliminado" });
-});
-
-app.post("/products", express.json(), (req, res) => {
-    const newProduct = req.body;
-    products.push(newProduct); 
-    broadcastProducts(); 
-    res.json({ message: "Producto agregado correctamente", product: newProduct });
-});
-
-
-app.put("/edit-product/:id", express.json(), (req, res) => {
-    const productId = req.params.id;
-    const { name, price } = req.body;
-
-    const productIndex = products.findIndex(product => product.id === productId);
-    if (productIndex !== -1) {
-        products[productIndex].name = name;
-        products[productIndex].price = price;
-        broadcastProducts(); 
-        res.json({ message: "Producto actualizado" });
-    } else {
-        res.status(404).json({ message: "Producto no encontrado" });
-    }
-});
-
-// Función para enviar los productos a todos los clientes conectados
-function broadcastProducts() {
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(products));
-        }
-    });
-}
-
-module.exports = {
-    app,
-    server,
-    wss,
-};
+export { app, server, wss };

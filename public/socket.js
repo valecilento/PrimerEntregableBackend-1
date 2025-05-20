@@ -1,6 +1,6 @@
 const socket = new WebSocket('ws://localhost:4000');
 
-socket.onmessage = (event) => {
+socket.onmessage = async (event) => {
     const products = JSON.parse(event.data);
     const productList = document.getElementById('product-list');
 
@@ -10,14 +10,14 @@ socket.onmessage = (event) => {
         const li = document.createElement("li");
         li.setAttribute("id", product.id);
         li.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" width="100">
+            <img src="${product.img}" alt="${product.nombre}" width="100">
             
             <!-- Mostrar "span" y "input" desde el inicio -->
-            <span id="name-${product.id}">${product.name}</span>
-            <input type="text" id="input-name-${product.id}" class="form-control d-none" value="${product.name}">
+            <span id="name-${product.id}">${product.nombre}</span>
+            <input type="text" id="input-name-${product.id}" class="form-control d-none" value="${product.nombre}">
 
-            <span id="price-${product.id}">$ ${product.price}</span>
-            <input type="number" id="input-price-${product.id}" class="form-control d-none" value="${product.price}">
+            <span id="price-${product.id}">$ ${product.precio}</span>
+            <input type="number" id="input-price-${product.id}" class="form-control d-none" value="${product.precio}">
 
             <button class="btn btn-warning" onclick="editProduct('${product.id}')">Editar</button>
             <button class="btn btn-success d-none" onclick="saveProduct('${product.id}')">Guardar</button>
