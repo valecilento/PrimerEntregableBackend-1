@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); 
 
 
-mongoose.connect('mongodb+srv://valeecilento:AyxG2N0QnTBNbBxr@cluster0.mmnvabv.mongodb.net/products').then(() => {
+mongoose.connect('mongodb+srv://@cluster0.mmnvabv.mongodb.net/products').then(() => {
     console.log('Conectado a la base de datos');
     server.listen(PORT, () => {
         console.log(`Servidor HTTP corriendo en http://localhost:${PORT}`);
