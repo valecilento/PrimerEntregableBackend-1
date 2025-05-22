@@ -15,9 +15,6 @@ const app = express();
 app.use(express.json());
 const PORT = 4000;
 app.use('/api/products', productsRouter);
-// app.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
-// server.listen(PORT, () => console.log(`Servidor escuchando en el puerto ${PORT}`));
-
 
 const server = createServer(app); // Crea un servidor HTTP
 const wss = new WebSocketServer({ server }); // Crea servidor WebSocket

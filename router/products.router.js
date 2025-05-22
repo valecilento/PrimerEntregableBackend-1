@@ -24,8 +24,8 @@ router.get("/:pid", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    let {nombre, precio, image} = req.body;
-    let result = await productModel.create({nombre, precio, image});
+    let {name, price, image} = req.body;
+    let result = await productModel.create({name, price, image});
     res.send({result:"success", message: "Producto agregado", payload: result});
   }
   catch (error) {
@@ -41,14 +41,22 @@ router.delete("/:pid", async (req, res) => {
 });
 
 router.put("/:pid", async (req, res) => {
-    let {pid} = req.params;
-    let userToReplace = req.body;
-    if (!userToReplace.nombre || !userToReplace.precio || !userToReplace.image) {
-        return res.send({ status: "error", message: "Faltan datos" });
+  try {
+    const { pid } = req.params;
+    const { name, price, image } = req.body;
+    if (!name || !price) {
+        return res.send({ status: "error", message: "No se pudo actualizar el producto" });
     };
-    let result = await productModel.updateOne({_id: pid}, userToReplace);
-    res.send({result:"success", message: "Producto actualizado", payload: result});
+    const updatedProduct = await productModel.findByIdAndUpdate(pid, { name, price }, { new: true } 
+        );
+    if (!updatedProduct) {
+        return res.status(404).json({ result: "error", message: "Producto no encontrado" });
+    }
+    res.json({ result: "success", message: "Producto actualizado", payload: updatedProduct });
+    } catch (error) {
+        console.error("Error al actualizar el producto:", error);
+        res.status(500).json({ result: "error", message: "Error interno en el servidor" });
+    }
 });
-
 
 export default router;

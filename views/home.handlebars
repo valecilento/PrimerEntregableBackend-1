@@ -18,15 +18,15 @@
                         <img id="preview" src="{{this.image}}" alt="{{this.name}}" width="100">
 
                         <!-- Nombre y Precio con "span" e "input" oculto -->
-                        <span id="name-{{this.id}}">{{this.name}}</span>
-                        <input type="text" placeholder="Ingrese el nombre del producto" id="input-name-{{this.id}}" class="form-control d-none" value="{{this.name}}">
+                        <span id="name-{{this._id}}">{{this.name}}</span>
+                        <input type="text" placeholder="Ingrese el nombre del producto" id="input-name-{{this._id}}" class="form-control d-none" value="{{this.name}}">
 
-                        <span id="price-{{this.id}}">$ {{this.price}}</span>
-                        <input type="number" placeholder="Ingrese el precio del producto" id="input-price-{{this.id}}" class="form-control d-none" value="{{this.price}}">
+                        <span id="price-{{this._id}}">$ {{this.price}}</span>
+                        <input type="number" placeholder="Ingrese el precio del producto" id="input-price-{{this._id}}" class="form-control d-none" value="{{this.price}}">
 
-                        <button class="btn btn-warning" onclick="editProduct('{{this.id}}')">Editar</button>
-                        <button class="btn btn-success d-none" onclick="saveProduct('{{this.id}}')">Guardar</button>
-                        <button class="btn btn-danger" onclick="deleteProduct('{{this.id}}')">Eliminar</button>
+                        <button class="btn btn-warning" onclick="editProduct('{{this._id}}')">Editar</button>
+                        <button class="btn btn-success d-none" onclick="saveProduct('{{this._id}}')">Guardar</button>
+                        <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
                     </li>
                     {{/each}}
                 </ul>
