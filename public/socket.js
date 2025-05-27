@@ -1,37 +1,59 @@
 const socket = new WebSocket('ws://localhost:4000');
 
 socket.onmessage = async (event) => {
-    const products = JSON.parse(event.data);
-    const productList = document.getElementById('product-list');
+    const data = JSON.parse(event.data); 
 
-    productList.innerHTML = ""; // Limpia la lista antes de actualizar
+    if (data.type === "products") {
+        const productList = document.getElementById('product-list');
+        productList.innerHTML = "";
+        data.payload.forEach(product => {
+            const li = document.createElement("li");
+            li.setAttribute("id", product._id);
+            li.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" width="100">
+                <span id="name-${product._id}">${product.name}</span>
+                <input type="text" id="input-name-${product._id}" class="form-control d-none" value="${product.name}">
+                <span id="price-${product._id}">$ ${product.price}</span>
+                <input type="number" id="input-price-${product._id}" class="form-control d-none" value="${product.price}">
 
-    products.forEach(product => {
-        const li = document.createElement("li");
-        li.setAttribute("id", product._id);
-        console.log(event.data);
-        li.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" width="100">
-            
-            <span id="name-${product._id}">${product.name}</span>
-            <input type="text" id="input-name-${product._id}" class="form-control d-none" value="${product.name}">
-
-            <span id="price-${product._id}">$ ${product.price}</span>
-            <input type="number" id="input-price-${product._id}" class="form-control d-none" value="${product.price}">
-
-            <button class="btn btn-warning" onclick="editProduct('${product._id}')">Editar</button>
-            <button class="btn btn-success d-none" onclick="saveProduct('${product._id}')">Guardar</button>
-            <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">Eliminar</button>
-        `;
+                <button class="btn btn-warning" onclick="editProduct('${product._id}')">Editar</button>
+                <button class="btn btn-success d-none" onclick="saveProduct('${product._id}')">Guardar</button>
+                <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">Eliminar</button>
+            `;
         productList.appendChild(li);
     });
+    }
+    if (data.type === "carts") {
+        const cartList = document.getElementById('cart-list');
+        if (cartList) {
+            cartList.innerHTML = "";
+            const product = data.payload[0].products[0].product;
+            data.payload.forEach(cart => {
+            const li = document.createElement("li");
+            li.setAttribute("id", cart._id);
+            li.innerHTML = `
+                <strong>Carrito ID:</strong> ${cart._id}
+                <img src="${product.image}" alt="${product.name}" width="100">
+                <span id="name-${product._id}">${product.name}</span>
+                <span id="price-${product._id}">$ ${product.price}</span>
+                <button class="btn btn-success d-none" onclick="addProductToCart('${cart._id}','${product._id}')">Guardar</button>
+
+                <ul>
+                    ${cart.products.map(p => `
+                        <li>${p.product.name} - Cantidad: ${p.quantity}</li>
+                    `).join('')}
+                </ul>
+            `;
+            cartList.appendChild(li);
+        });
+    } }
 };
 
 async function sendProduct() {
     const name = document.getElementById('productName').value;
     const price = document.getElementById('productPrice').value;
     const imageInput = document.getElementById('productImage').files[0];  
-
+    
     if (name && price && imageInput) {
         try {
             const formData = new FormData();

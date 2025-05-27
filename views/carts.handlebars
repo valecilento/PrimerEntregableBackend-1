@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carritos</title>
+    <script src="/public/socket.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container mt-5 d-flex  align-items-center justify-content-center">
+        <div class="d-flex">
+            <div style="margin-right: 5em;">
+                <h1>Carritos</h1>
+                <ul id="cart-list">
+                    {{#each carts}}
+                    <li>
+                        <strong>Carrito ID:</strong> {{this._id}}
+                        <ul>
+                            {{#each this.products}}
+                             <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="{{this.product._id}}">
+                                {{#if this.product}}
+                                    <img id="preview" src="{{this.product.image}}" alt="{{this.product.name}}" width="100">
+                                    <span>{{this.product.name}}</span>
+                                    <span>Cantidad: {{this.quantity}}</span>
+                                    <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
+                                {{else}}
+                                    <span>Producto eliminado</span>
+                                {{/if}}
+                            </li>
+                                {{/each}}
+                        </ul>
+                        <button class="btn btn-danger" onclick="deleteCart('{{this._id}}')">Eliminar Carrito</button>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import {promises as fs} from 'fs';
+import productModel from './models/product.model.js'; 
 import path from 'path';
 
 const pathProducts = path.join(__dirname, 'products.json');
@@ -6,7 +6,7 @@ const pathProducts = path.join(__dirname, 'products.json');
 async function saveProducts(products) {
     try {
         // Sobrescribe el archivo con el contenido actualizado
-        await fs.writeFile(pathProducts, JSON.stringify(products));
+        await productModel.find().lean();
     } catch (error) {
         console.error('Error al guardar los productos:', error);
     }
@@ -14,8 +14,7 @@ async function saveProducts(products) {
 
 async function getProducts() {
     try {
-        await fs.access(pathProducts); //verifico si existe el archivo products.json
-        const products = await fs.readFile(pathProducts, 'utf-8');
+        const products = await productModel.find().lean();
         if (pathProducts === "") { // Si el archivo existe pero está vacío, lo inicializa
             return [];
         }
@@ -35,7 +34,7 @@ async function getProductById(id) {
 
 async function addProduct(product) {
     const products = await getProducts();
-    const newProduct = { ...product, id: products.length + 1 };
+    const newProduct = { ...product};
     products.push(newProduct);
     saveProducts(products); 
     return newProduct; // Devuelvo el nuevo producto agregado

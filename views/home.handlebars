@@ -14,7 +14,7 @@
                 <h1>Lista de Productos</h1>
                 <ul id="product-list">
                     {{#each products}}
-                    <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="{{this.id}}">
+                    <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="{{this._id}}">
                         <img id="preview" src="{{this.image}}" alt="{{this.name}}" width="100">
 
                         <!-- Nombre y Precio con "span" e "input" oculto -->
@@ -27,6 +27,9 @@
                         <button class="btn btn-warning" onclick="editProduct('{{this._id}}')">Editar</button>
                         <button class="btn btn-success d-none" onclick="saveProduct('{{this._id}}')">Guardar</button>
                         <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
+                        <div class="d-flex flex-column">
+                            <button class="btn btn-success d-none" onclick="addProductToCart('{{../carts._id}}','{{this._id}}')">Agregar al carrito</button>
+                        </div>
                     </li>
                     {{/each}}
                 </ul>
