@@ -1,52 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Tienda de Productos</title>
-    <script src="/public/socket.js" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-</head>
-<body>
-    <div class="container mt-5 d-flex  align-items-center justify-content-center">
-        <div class="d-flex">
-            <div style="margin-right: 5em;">
-                <h1>Lista de Productos</h1>
-                <ul id="product-list">
-                    {{#each products}}
-                    <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="{{this._id}}">
-                        <img id="preview" src="{{this.image}}" alt="{{this.name}}" width="100">
+<div class="container mt-5 d-flex  align-items-center justify-content-center">
+  <div class="d-flex">
+    <div style="margin-right: 5em;">
+      <h1>Lista de Productos</h1>
+      <ul id="product-list">
+        {{#each products}}
+        <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="{{this._id}}">
+          <img id="preview" src="{{this.image}}" alt="{{this.name}}" width="100">
 
-                        <!-- Nombre y Precio con "span" e "input" oculto -->
-                        <span id="name-{{this._id}}">{{this.name}}</span>
-                        <input type="text" placeholder="Ingrese el nombre del producto" id="input-name-{{this._id}}" class="form-control d-none" value="{{this.name}}">
+          <!-- Nombre y Precio con "span" e "input" oculto -->
+          <span id="name-{{this._id}}">{{this.name}}</span>
+          <input type="text" placeholder="Ingrese el nombre del producto" id="input-name-{{this._id}}" class="form-control d-none" value="{{this.name}}">
 
-                        <span id="price-{{this._id}}">$ {{this.price}}</span>
-                        <input type="number" placeholder="Ingrese el precio del producto" id="input-price-{{this._id}}" class="form-control d-none" value="{{this.price}}">
+          <span id="price-{{this._id}}">$ {{this.price}}</span>
+          <input type="number" placeholder="Ingrese el precio del producto" id="input-price-{{this._id}}" class="form-control d-none" value="{{this.price}}">
 
-                        <button class="btn btn-warning" onclick="editProduct('{{this._id}}')">Editar</button>
-                        <button class="btn btn-success d-none" onclick="saveProduct('{{this._id}}')">Guardar</button>
-                        <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
-                        <div class="d-flex flex-column">
-                            <button class="btn btn-success d-none" onclick="addProductToCart('{{../carts._id}}','{{this._id}}')">Agregar al carrito</button>
-                        </div>
-                    </li>
-                    {{/each}}
-                </ul>
-            </div>
-            <div>
-                <h2>Agregar Producto</h2>
-                <form class="mb-3 align-items-center" action="/upload-img"  method="POST" enctype="multipart/form-data" id="productForm">
-                    <img id="preview" style="display:none;" width="200">
-                    <input type="text" id="productName" placeholder="Nombre del producto" class="form-control mb-3 form-label">
-                    <input type="number" id="productPrice" placeholder="Precio" class="mb-3 form-control">
-                    <input type="file" id="productImage" name="productImage" class="mb-3 form-control">
-                    <div class="d-flex justify-content-center">
-                        <button onclick="sendProduct()" class="btn btn-primary">Agregar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+          <button class="btn btn-warning" onclick="editProduct('{{this._id}}')">Editar</button>
+          <button class="btn btn-success d-none" onclick="saveProduct('{{this._id}}')">Guardar</button>
+          <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Eliminar</button>
+          <div class="d-flex flex-column">
+            <button class="btn btn-success d-none" onclick="addProductToCart('{{../carts._id}}','{{this._id}}')">Agregar al carrito</button>
+          </div>
+        </li>
+        {{/each}}
+      </ul>
     </div>
-</body>
-</html>
+    <div>
+      <h2>Agregar Producto</h2>
+      <form class="mb-3 align-items-center" action="/upload-img" method="POST" enctype="multipart/form-data" id="productForm">
+        <img id="preview" style="display:none;" width="200">
+        <input type="text" id="productName" placeholder="Nombre del producto" class="form-control mb-3 form-label">
+        <input type="number" id="productPrice" placeholder="Precio" class="mb-3 form-control">
+        <input type="file" id="productImage" name="productImage" class="mb-3 form-control">
+        <div class="d-flex justify-content-center">
+          <button onclick="sendProduct()" class="btn btn-primary">Agregar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/public/socket.js" defer></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>

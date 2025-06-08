@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { cartModel } from "../models/cart.model.js";
 import { wss } from "../server.js";
+import mongoose from "mongoose"; // se importa mongoose
+import WebSocket from "ws"; // se importa WebSocket
 
 const router = Router();
 
