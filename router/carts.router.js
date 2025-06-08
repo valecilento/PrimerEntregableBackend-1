@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { cartModel } from "../models/cart.model.js";
 import { wss } from "../server.js";
-import mongoose from "mongoose"; // se importa mongoose
-import WebSocket from "ws"; // se importa WebSocket
+import mongoose from "mongoose"; 
+import WebSocket from "ws";
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Obtener todos los carritos
+// Obtengo todos los carritos 
 router.get("/carts", async (req, res) => {
   try {
     const carts = await cartModel.find().populate("products.product");

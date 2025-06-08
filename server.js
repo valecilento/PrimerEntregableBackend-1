@@ -9,7 +9,6 @@ import { cartModel } from './models/cart.model.js';
 import WebSocket from 'ws';
 import productsRouter from './router/products.router.js';
 import cartsRouter from './router/carts.router.js';
-// import multer from 'multer';
 import handlebars from 'express-handlebars';
 import { createCart } from './cartManager.js'; 
 import uploader from './utils.js'; // Importa multer desde utils.js
@@ -30,10 +29,6 @@ mongoose.connect('mongodb+srv://valeecilento:oAqWpQQ6EHAePEcJ@cluster0.mmnvabv.m
     server.listen(PORT, () => {
         console.log(`Servidor HTTP corriendo en http://localhost:${PORT}`);
     });
-    // Las apis rest funcionan sin necesidad de esta linea
-    // app.listen(PORT, () => {
-    //     console.log(`API disponible`);
-    // })
     createCart(); // Inicializa el carrito al iniciar el servidor
 }).catch(error => {
     console.error('Error al conectar a la base de datos:', error);
@@ -97,16 +92,6 @@ async function broadcastCarts() {
     }
 }
 
-// se comenta porque ahora se importa desde utils.js
-// const storage = multer.diskStorage({
-//     destination: "./public/img/",
-//     filename: (req, file, cb) => {
-//         cb(null, Date.now() + "-" + file.originalname);
-//     }
-// });
-
-// se comenta porque ahora se importa desde utils.js
-// const upload = multer({ storage });
 app.post("/upload-img", uploader.single("image"), (req, res) => { 
         const imagePath = `/public/img/${req.file.filename}`; // Ruta accesible de la imagen
         res.json({ message: "Imagen subida con éxito", imageUrl: imagePath });  
